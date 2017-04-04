@@ -18,7 +18,7 @@ variable "availability_zone" {
 
 variable "ecs_cluster_name" {
   description = "The name of the Amazon ECS cluster."
-  default = "jenkins"
+  default = "jgraf-jenkins"
 }
 
 variable "amis" {
@@ -65,7 +65,7 @@ variable "desired_service_count" {
 }
 
 variable "s3_bucket" {
-  default = "mycompany-jenkins"
+  default = "jgraf-jenkins"
   description = "S3 bucket where remote state and Jenkins data will be stored."
 }
 

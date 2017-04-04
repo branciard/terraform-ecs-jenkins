@@ -11,8 +11,8 @@
 
 # ####################################################
 #
-STATEBUCKET = mycompany-terraform
-PREFIX = jenkins
+STATEBUCKET = jgraf-jenkins
+PREFIX = jgraf-jenkins
 
 # # Before we start test that we have the mandatory executables available
 	EXECUTABLES = git terraform

@@ -7,7 +7,7 @@ provider "aws" {
 resource "terraform_remote_state" "tfstate" {
   backend = "s3"
   config {
-    bucket = "mycompany-terraform"
+    bucket = "${var.s3_bucket}"
     key = "jenkins/terraform.tfstate"
     region = "us-east-1"
   }
@@ -19,6 +19,10 @@ resource "aws_vpc" "jenkins" {
 
   tags {
     for = "${var.ecs_cluster_name}"
+    Email = "jim.graf@slalom.com"
+    Engagement_Office = "Chicago"
+    Manager = "Jim Graf"
+    Market = "Cross-Market"
   }
 }
 
@@ -31,6 +35,10 @@ resource "aws_route_table" "external" {
 
   tags {
     for = "${var.ecs_cluster_name}"
+    Email = "jim.graf@slalom.com"
+    Engagement_Office = "Chicago"
+    Manager = "Jim Graf"
+    Market = "Cross-Market"
   }
 }
 
@@ -46,6 +54,10 @@ resource "aws_subnet" "jenkins" {
 
   tags {
     for = "${var.ecs_cluster_name}"
+    Email = "jim.graf@slalom.com"
+    Engagement_Office = "Chicago"
+    Manager = "Jim Graf"
+    Market = "Cross-Market"
   }
 }
 
@@ -54,6 +66,10 @@ resource "aws_internet_gateway" "jenkins" {
 
   tags {
     for = "${var.ecs_cluster_name}"
+    Email = "jim.graf@slalom.com"
+    Engagement_Office = "Chicago"
+    Manager = "Jim Graf"
+    Market = "Cross-Market"
   }
 }
 
@@ -125,6 +141,30 @@ resource "aws_autoscaling_group" "asg_jenkins" {
   tag {
     key = "Name"
     value = "${var.ecs_cluster_name}_asg"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key = "Email"
+    value = "jim.graf@slalom.com"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key = "Engagement_Office"
+    value = "Chicago"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key = "Manager"
+    value = "Jim Graf"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key = "Market"
+    value = "Cross-Market"
     propagate_at_launch = true
   }
 }
