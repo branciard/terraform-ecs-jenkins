@@ -21,6 +21,16 @@ variable "ecs_cluster_name" {
   default = "jgraf-jenkins"
 }
 
+variable "vpc_cidr_block" {
+  description = "The CIDR block for the VPC Jenkins will live in"
+  default = "10.0.0.0/16"
+}
+
+variable "subnet_cidr_block" {
+  description = "The CIDR block for the subnet Jenkins will live in"
+  default = "10.0.1.0/24"
+}
+
 variable "amis" {
   description = "Which AMI to spawn. Defaults to the AWS ECS optimized images."
   default = {

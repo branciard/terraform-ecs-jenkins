@@ -9,12 +9,12 @@ resource "terraform_remote_state" "tfstate" {
   config {
     bucket = "${var.s3_bucket}"
     key = "jenkins/terraform.tfstate"
-    region = "us-east-1"
+    region = "${var.region}"
   }
 }
 
 resource "aws_vpc" "jenkins" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = "${var.vpc_cidr_block}"
   enable_dns_hostnames = true
 
   tags {
@@ -49,7 +49,7 @@ resource "aws_route_table_association" "external-jenkins" {
 
 resource "aws_subnet" "jenkins" {
   vpc_id = "${aws_vpc.jenkins.id}"
-  cidr_block = "10.0.1.0/24"
+  cidr_block = "${var.subnet_cidr_block}"
   availability_zone = "${var.availability_zone}"
 
   tags {
