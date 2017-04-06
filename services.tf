@@ -28,6 +28,7 @@ resource "aws_iam_role_policy" "ecs_task_role_policy_jenkins" {
 resource "aws_iam_policy_attachment" "ecs_access_policy" {
   name = "ecs_access_attachment"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess"
+  roles = ["${aws_iam_role.ecs_task_role_jenkins.id}"]
 }
 
 resource "aws_ecs_task_definition" "jenkins" {

@@ -1,3 +1,5 @@
-FROM jenkins:2.46.1
-COPY plugins.txt /usr/share/jenkins/plugins.txt
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+FROM jenkins
+
+RUN /usr/local/bin/install-plugins.sh ace-editor amazon-ecr amazon-ecs antisamy-markup-formatter authentication-tokens aws-credentials awseb-deployment-plugin bouncycastle-api branch-api build-timeout cloudbees-folder credentials credentials-binding display-url-api docker-commons docker-workflow durable-task email-ext external-monitor-job git git-client git-server github github-api github-branch-source github-organization-folder gradle greenballs handlebars icon-shim jira jquery jquery-detached junit ldap mailer mapdb-api matrix-auth matrix-project momentjs pam-auth pipeline-build-step pipeline-github-lib pipeline-graph-analysis pipeline-input-step pipeline-milestone-step pipeline-model-api pipeline-model-declarative-agent pipeline-model-definition pipeline-model-extensions pipeline-rest-api pipeline-stage-step pipeline-stage-tags-metadata pipeline-stage-view plain-credentials resource-disposer scm-api script-security slack sonar ssh-credentials ssh-slaves structs subversion timestamper token-macro windows-slaves workflow-aggregator workflow-api workflow-basic-steps workflow-cps workflow-cps-global-lib workflow-durable-task-step workflow-job workflow-multibranch workflow-scm-step workflow-step-api workflow-support ws-cleanup
+
+RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state

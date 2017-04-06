@@ -6,6 +6,6 @@ resource "aws_ecr_repository" "jenkins" {
 }
 
 variable "jenkins_image_name" {
-  default = "jgraf-jenkins/jenkins"
+  default = "jgraf-jenkins/abbvie-jenkins"
   description = "Jenkins image name."
 }
