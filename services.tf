@@ -4,11 +4,11 @@ resource "template_file" "jenkins_task_template" {
 
 resource "aws_iam_role" "ecs_task_role_jenkins" {
   name = "${var.ecs_cluster_name}_task_role"
-  assume_role_policy = "${file("policies/ecs-task-role.json")}"
+  assume_role_policy = "${file("roles/ecs-task-role.json")}"
 }
 
 resource "template_file" "ecs_task_role_policy_jenkins" {
-  template = "${file("templates/ecs-task-role-policy.json.tpl")}"
+  template = "${file("policies/templates/ecs-task-role-policy.json.tpl")}"
 
   vars {
     s3_bucket = "${var.s3_bucket}"

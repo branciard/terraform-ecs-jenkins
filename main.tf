@@ -202,7 +202,7 @@ resource "aws_launch_configuration" "lc_jenkins" {
 
 resource "aws_iam_role" "host_role_jenkins" {
   name = "host_role_${var.ecs_cluster_name}"
-  assume_role_policy = "${file("policies/ecs-role.json")}"
+  assume_role_policy = "${file("roles/ecs-role.json")}"
 }
 
 resource "aws_iam_role_policy" "instance_role_policy_jenkins" {
