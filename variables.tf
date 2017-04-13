@@ -18,7 +18,7 @@ variable "availability_zone" {
 
 variable "ecs_cluster_name" {
   description = "The name of the Amazon ECS cluster."
-  default = "jgraf-jenkins"
+  default = "jenkins"
 }
 
 variable "vpc_cidr_block" {
@@ -50,7 +50,7 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  default = "devops-tf"
+  default = "jenkins"
   description = "SSH key name in your AWS account for AWS instances."
 }
 
@@ -75,7 +75,7 @@ variable "desired_service_count" {
 }
 
 variable "s3_bucket" {
-  default = "jgraf-jenkins"
+  default = "abbvie-jenkins"
   description = "S3 bucket where remote state and Jenkins data will be stored."
 }
 
@@ -87,4 +87,14 @@ variable "restore_backup" {
 variable "jenkins_repository_url" {
   default = "jenkins"
   description = "ECR Repository for Jenkins."
+}
+
+variable "jenkins_server_image_name" {
+  default = "jenkins-server"
+  description = "Jenkins server image name."
+}
+
+variable "jenkins_java_build_agent_image_name" {
+  default = "jenkins-java-agent"
+  description = "Jenkins Java build agent image name."
 }

@@ -1,7 +1,3 @@
-resource "template_file" "jenkins_task_template" {
-  template = "${file("templates/jenkins.json.tpl")}"
-}
-
 resource "aws_iam_role" "ecs_task_role_jenkins" {
   name = "${var.ecs_cluster_name}_task_role"
   assume_role_policy = "${file("roles/ecs-task-role.json")}"
@@ -29,6 +25,28 @@ resource "aws_iam_policy_attachment" "ecs_access_policy" {
   name = "ecs_access_attachment"
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerServiceFullAccess"
   roles = ["${aws_iam_role.ecs_task_role_jenkins.id}"]
+}
+
+resource "aws_ecr_repository" "jenkins-server" {
+  name = "${var.jenkins_server_image_name}"
+  provisioner "local-exec" {
+    command = "cd docker;./deploy-image.sh ${self.repository_url} ${var.jenkins_server_image_name} server"
+  }
+}
+
+resource "aws_ecr_repository" "jenkins-build-agent" {
+  name = "${var.jenkins_java_build_agent_image_name}"
+  provisioner "local-exec" {
+    command = "cd docker;./deploy-image.sh ${self.repository_url} ${var.jenkins_java_build_agent_image_name} agent"
+  }
+}
+
+resource "template_file" "jenkins_task_template" {
+  template = "${file("templates/jenkins.json.tpl")}"
+
+  vars {
+    jenkins_image_name = "${aws_ecr_repository.jenkins-server.repository_url}"
+  }
 }
 
 resource "aws_ecs_task_definition" "jenkins" {

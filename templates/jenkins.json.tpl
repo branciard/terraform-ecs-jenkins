@@ -1,7 +1,7 @@
 [
   {
     "name": "jenkins",
-    "image": "jenkins:2.46.1",
+    "image": "${jenkins_image_name}",
     "cpu": 128,
     "memory": 1024,
     "essential": true,

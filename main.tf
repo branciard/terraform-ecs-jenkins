@@ -124,7 +124,7 @@ resource "aws_ecs_cluster" "jenkins" {
 }
 
 resource "aws_autoscaling_group" "asg_jenkins" {
-  name = "asg_${var.ecs_cluster_name}"
+  name = "${var.ecs_cluster_name}_asg"
   availability_zones = ["${var.availability_zone}"]
   min_size = "${var.min_instance_size}"
   max_size = "${var.max_instance_size}"
