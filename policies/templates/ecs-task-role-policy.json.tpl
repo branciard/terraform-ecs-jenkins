@@ -55,7 +55,7 @@
                 "s3:RestoreObject"
             ],
             "Resource": [
-                "arn:aws:s3:::${s3_bucket}"
+                "${jsonencode(${s3_buckets})}"
             ]
         }
     ]

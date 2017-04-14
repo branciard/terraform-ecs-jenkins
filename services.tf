@@ -15,6 +15,21 @@ resource "template_file" "ecs_task_role_policy_jenkins" {
   }
 }
 
+resource "template_file" "ecs_task_role_policy_jenkins" {
+  template = "${file("policies/templates/ecs-task-role-policy.json.tpl")}"
+
+  vars {
+    s3_buckets = [
+      "arn:aws:s3:::${var.s3_bucket}/*",
+      "arn:aws:s3:::dev-abbvie-cfe-ui-us-east-1/*"
+    ]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_iam_role_policy" "ecs_task_role_policy_jenkins" {
   name = "${var.ecs_cluster_name}_task_role_policy"
   policy = "${template_file.ecs_task_role_policy_jenkins.rendered}"
