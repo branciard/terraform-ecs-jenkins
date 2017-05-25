@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo ECS_CLUSTER='${ecs_cluster_name}' > /etc/ecs/ecs.config
+yum install -y aws-cli
+aws s3 cp s3://config-us-east-1/etc/ecs/ecs.config /etc/ecs/ecs.config --region us-east-1
+echo ECS_CLUSTER='${ecs_cluster_name}' >> /etc/ecs/ecs.config
 
 # Create and set correct permissions for Jenkins mount directory
 jenkins_host_dir=/ecs/jenkins-home

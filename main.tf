@@ -22,7 +22,6 @@ resource "aws_vpc" "jenkins" {
     Email = "jim.graf@slalom.com"
     Engagement_Office = "Chicago"
     Manager = "Jim Graf"
-    Market = "Cross-Market"
   }
 }
 
@@ -38,7 +37,6 @@ resource "aws_route_table" "external" {
     Email = "jim.graf@slalom.com"
     Engagement_Office = "Chicago"
     Manager = "Jim Graf"
-    Market = "Cross-Market"
   }
 }
 
@@ -57,7 +55,6 @@ resource "aws_subnet" "jenkins" {
     Email = "jim.graf@slalom.com"
     Engagement_Office = "Chicago"
     Manager = "Jim Graf"
-    Market = "Cross-Market"
   }
 }
 
@@ -69,7 +66,6 @@ resource "aws_internet_gateway" "jenkins" {
     Email = "jim.graf@slalom.com"
     Engagement_Office = "Chicago"
     Manager = "Jim Graf"
-    Market = "Cross-Market"
   }
 }
 
@@ -159,12 +155,6 @@ resource "aws_autoscaling_group" "asg_jenkins" {
   tag {
     key = "Manager"
     value = "Jim Graf"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key = "Market"
-    value = "Cross-Market"
     propagate_at_launch = true
   }
 }

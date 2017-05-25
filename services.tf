@@ -21,7 +21,7 @@ resource "template_file" "ecs_task_role_policy_jenkins" {
   vars {
     s3_buckets = [
       "arn:aws:s3:::${var.s3_bucket}/*",
-      "arn:aws:s3:::dev-abbvie-cfe-ui-us-east-1/*"
+      "arn:aws:s3:::dev-us-east-1/*"
     ]
   }
 
