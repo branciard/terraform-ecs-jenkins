@@ -4,75 +4,83 @@ provider "aws" {
   region = "${var.region}"
 }
 
-resource "terraform_remote_state" "tfstate" {
+terraform {
+  required_version = "0.9.11"
+  backend "s3" {}
+}
+
+data "terraform_remote_state" "tfstate" {
   backend = "s3"
   config {
-    bucket = "${var.s3_bucket}"
-    key = "jenkins/terraform.tfstate"
-    region = "${var.region}"
+    bucket     = "${var.s3_bucket}"
+    region     = "${var.region}"
+    key        = "${var.s3_bucket_key}"
+    encrypt    = "${var.s3_bucket_encrypt}"
   }
 }
 
-resource "aws_vpc" "jenkins" {
+
+
+resource "aws_vpc" "jenkins-vpc" {
   cidr_block = "${var.vpc_cidr_block}"
   enable_dns_hostnames = true
 
   tags {
     for = "${var.ecs_cluster_name}"
-    Email = "jim.graf@slalom.com"
-    Engagement_Office = "Chicago"
-    Manager = "Jim Graf"
+    Email = "${var.contact_email}"
+    Engagement_Office = "${var.contact_office}"
+    Manager = "${var.contact_name}"
   }
 }
 
-resource "aws_route_table" "external" {
-  vpc_id = "${aws_vpc.jenkins.id}"
+resource "aws_route_table" "external-route-table" {
+  vpc_id = "${aws_vpc.jenkins-vpc.id}"
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.jenkins.id}"
+    gateway_id = "${aws_internet_gateway.jenkins-gateway.id}"
   }
 
   tags {
     for = "${var.ecs_cluster_name}"
-    Email = "jim.graf@slalom.com"
-    Engagement_Office = "Chicago"
-    Manager = "Jim Graf"
+    Email = "${var.contact_email}"
+    Engagement_Office = "${var.contact_office}"
+    Manager = "${var.contact_name}"
   }
 }
 
 resource "aws_route_table_association" "external-jenkins" {
-  subnet_id = "${aws_subnet.jenkins.id}"
-  route_table_id = "${aws_route_table.external.id}"
+  subnet_id = "${aws_subnet.jenkins-subnet.id}"
+  route_table_id = "${aws_route_table.external-route-table.id}"
 }
 
-resource "aws_subnet" "jenkins" {
-  vpc_id = "${aws_vpc.jenkins.id}"
+resource "aws_subnet" "jenkins-subnet" {
+  vpc_id = "${aws_vpc.jenkins-vpc.id}"
   cidr_block = "${var.subnet_cidr_block}"
   availability_zone = "${var.availability_zone}"
 
   tags {
     for = "${var.ecs_cluster_name}"
-    Email = "jim.graf@slalom.com"
-    Engagement_Office = "Chicago"
-    Manager = "Jim Graf"
+    Email = "${var.contact_email}"
+    Engagement_Office = "${var.contact_office}"
+    Manager = "${var.contact_name}"
   }
 }
 
-resource "aws_internet_gateway" "jenkins" {
-  vpc_id = "${aws_vpc.jenkins.id}"
+resource "aws_internet_gateway" "jenkins-gateway" {
+  vpc_id = "${aws_vpc.jenkins-vpc.id}"
 
   tags {
     for = "${var.ecs_cluster_name}"
-    Email = "jim.graf@slalom.com"
-    Engagement_Office = "Chicago"
-    Manager = "Jim Graf"
+    Email = "${var.contact_email}"
+    Engagement_Office = "${var.contact_office}"
+    Manager = "${var.contact_name}"
   }
 }
 
-resource "aws_security_group" "sg_jenkins" {
+resource "aws_security_group" "sg-jenkins" {
   name = "sg_${var.ecs_cluster_name}"
   description = "Allows all traffic"
-  vpc_id = "${aws_vpc.jenkins.id}"
+  vpc_id = "${aws_vpc.jenkins-vpc.id}"
 
   ingress {
     from_port = 22
@@ -115,11 +123,11 @@ resource "aws_security_group" "sg_jenkins" {
   }
 }
 
-resource "aws_ecs_cluster" "jenkins" {
+resource "aws_ecs_cluster" "jenkins-cluster" {
   name = "${var.ecs_cluster_name}"
 }
 
-resource "aws_autoscaling_group" "asg_jenkins" {
+resource "aws_autoscaling_group" "asg-jenkins" {
   name = "${var.ecs_cluster_name}_asg"
   availability_zones = ["${var.availability_zone}"]
   min_size = "${var.min_instance_size}"
@@ -127,8 +135,8 @@ resource "aws_autoscaling_group" "asg_jenkins" {
   desired_capacity = "${var.desired_instance_capacity}"
   health_check_type = "EC2"
   health_check_grace_period = 300
-  launch_configuration = "${aws_launch_configuration.lc_jenkins.name}"
-  vpc_zone_identifier = ["${aws_subnet.jenkins.id}"]
+  launch_configuration = "${aws_launch_configuration.lc-jenkins.name}"
+  vpc_zone_identifier = ["${aws_subnet.jenkins-subnet.id}"]
 
   lifecycle {
     create_before_destroy = true
@@ -142,67 +150,59 @@ resource "aws_autoscaling_group" "asg_jenkins" {
 
   tag {
     key = "Email"
-    value = "jim.graf@slalom.com"
+    value = "${var.contact_email}"
     propagate_at_launch = true
   }
 
   tag {
     key = "Engagement_Office"
-    value = "Chicago"
+    value = "${var.contact_office}"
     propagate_at_launch = true
   }
 
   tag {
     key = "Manager"
-    value = "Jim Graf"
+    value = "${var.contact_name}"
     propagate_at_launch = true
   }
 }
 
-resource "template_file" "user_data" {
+data "template_file" "user-data" {
   template = "${file("templates/user_data.tpl")}"
-
   vars {
-    access_key = "${var.access_key}"
-    secret_key = "${var.secret_key}"
-    s3_bucket = "${var.s3_bucket}"
+    region = "${var.region}"
     ecs_cluster_name = "${var.ecs_cluster_name}"
-    restore_backup = "${var.restore_backup}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
-resource "aws_launch_configuration" "lc_jenkins" {
+resource "aws_launch_configuration" "lc-jenkins" {
   name_prefix = "lc_${var.ecs_cluster_name}-"
   image_id = "${lookup(var.amis, var.region)}"
   instance_type = "${var.instance_type}"
-  security_groups = ["${aws_security_group.sg_jenkins.id}"]
+  security_groups = ["${aws_security_group.sg-jenkins.id}"]
   iam_instance_profile = "${aws_iam_instance_profile.iam_instance_profile.name}"
   key_name = "${var.key_name}"
   associate_public_ip_address = true
-  user_data = "${template_file.user_data.rendered}"
+  user_data = "${data.template_file.user-data.rendered}"
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "aws_iam_role" "host_role_jenkins" {
+resource "aws_iam_role" "host-role-jenkins" {
   name = "host_role_${var.ecs_cluster_name}"
   assume_role_policy = "${file("roles/ecs-role.json")}"
 }
 
-resource "aws_iam_role_policy" "instance_role_policy_jenkins" {
+resource "aws_iam_role_policy" "instance-role-policy-jenkins" {
   name = "instance_role_policy_${var.ecs_cluster_name}"
   policy = "${file("policies/ecs-instance-role-policy.json")}"
-  role = "${aws_iam_role.host_role_jenkins.id}"
+  role = "${aws_iam_role.host-role-jenkins.id}"
 }
 
 resource "aws_iam_instance_profile" "iam_instance_profile" {
   name = "iam_instance_profile_${var.ecs_cluster_name}"
   path = "/"
-  roles = ["${aws_iam_role.host_role_jenkins.name}"]
+  role = "${aws_iam_role.host-role-jenkins.name}"
 }

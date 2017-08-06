@@ -1,3 +1,11 @@
+
+## Credits
+
+* The Makefile idea (and the Makefile itself) is taken from this [blog post](http://karlcode.owtelse.com/blog/2015/09/01/working-with-terraform-remote-statefile/).
+
+* Thanks : forked from https://github.com/jamesggraf/terraform-ecs-jenkins forked from https://github.com/shuaibiyy/terraform-ecs-jenkins
+
+
 # ECS-Powered Jenkins
 
 This repo contains a [Terraform](https://terraform.io/) module for provisioning a Jenkins 2.0 server in an [AWS ECS](https://aws.amazon.com/ecs/) cluster. Jenkins on ECS can be used to achieve a scalable and cost-efficient CI workflow when coupled with the [Jenkins ECS plugin](https://wiki.jenkins-ci.org/display/JENKINS/Amazon+EC2+Container+Service+Plugin) as described in this [blog post](https://shuaib.me/ecs-jenkins/).
@@ -6,64 +14,70 @@ It also contains a Terraform configuration for building and provisioning a Jenki
 
 The terraform script stores the terraform state remotely in an S3 bucket. The Makefile by default sets up a copy of the remote state if it doesn’t exist and then runs either `terraform plan` or `terraform apply` depending on the target.
 
+
+### Prerequisite
+
+*  Terraform v0.9.11
+*  Docker 17.06.0-ce
+*  aws cli
+*  git
+
+
+### init
+
+
+ You must configure a `s3_bucket` in aws to store the terraform state. then fill the backend.tfvars file according to your created S3 bucket
+
+ You must create a key pair in aws and configure the key name in terraform.tfvars 
+  
+ Init your aws env with `aws configure` 
+ 
+ Check that default values in variables.tf are correct for you
+
+ Create a terraform.tfvars and fill it according to your config
+
+s3_bucket = "your bucket name in aws"
+s3_bucket_key = "terraform.tfstate"
+s3_bucket_encrypt = "true"
+key_name = "your ssh key name to use in aws "
+ecs_cluster_name = "jenkins-cluster"
+region = "us-east-1"
+access_key = "your aws access key"
+secret_key = "your aws secret key"
+auto_push_docker_img_in_ecr = "true or false"
+
+From the project's root directory,init your s3 bucket terraform backends with :
+
+`terraform init -backend-config=backend.tfvars`
+
 ## Usage
-
-### Provision Jenkins in ECS
-
-Run `make apply` from the project's root directory.
-
-Before you run the Makefile, you should set the following environment variables to authenticate with AWS:
-```
-$ export AWS_ACCESS_KEY_ID= <your key> # to store and retrieve the remote state in s3.
-$ export AWS_SECRET_ACCESS_KEY= <your secret>
-$ export AWS_DEFAULT_REGION= <your bucket region e.g. us-west-2>
-$ export TF_VAR_access_key=$AWS_ACCESS_KEY # exposed as access_key in terraform scripts
-$ export TF_VAR_secret_key=$AWS_SECRET_ACCESS_KEY # exposed as secret_key in terraform scripts
-```
-
-You need to change the default values of `s3_bucket` and `key_name` terraform variables defined in `variables.tf` or set them via environment variables:
-```
-$ export TF_VAR_s3_bucket=<your s3 bucket>
-$ export TF_VAR_key_name=<your keypair name>
-```
-You also need to change the value of `STATEBUCKET` in the Makefile to match that of the `s3_bucket` terraform variable.
 
 #### Run 'terraform plan'
 
-    make
+    terraform plan
 
 #### Run 'terraform apply'
 
-    make apply
-Upon completion, you'll need to access the AWS ECS console to find out the domain name of the Jenkins instance. It'll be something like `ec2-54-235-229-108.compute-1.amazonaws.com`. You can then reach Jenkins via your browser at `http://ec2-54-235-229-108.compute-1.amazonaws.com`.
+    terraform apply
+    
+Upon completion, you'll need to access the AWS ECS console to find out the domain name of the Jenkins instance. It'll be something like `ec2-XX-XX-XX-XX.compute-1.amazonaws.com`. You can then reach Jenkins via your browser at `http://ec2-XX-XX-XX-XX.compute-1.amazonaws.com`.
 
-#### Run 'terraform destroy'
 
-    make destroy
 
-### Provision a Jenkins image in ECR
+### Manually push dockers images in ECR
 
-1. `cd` into `docker` directory.
-2. Modify `plugins.txt` to your liking.
-3. Run `terraform apply`.
+If you auto_push_docker_img_in_ecr to false and want to manually push the docker images in ECR. Do : 
+
+    terraform show
+    
+    
+   you will find commands to execute at the end of the printed log.
+   
 
 __Note__: If you provisioned the Jenkins image in ECR, the repository URL would look like: `<aws_account_id>.dkr.ecr.us-east-1.amazonaws.com/<jenkins_image_name>:latest`.
 
-## Jenkins Data Backup
 
-When an EC2 instance is started in started in the Jenkins autoscaling group, a cronjob is configured on it (see `templates/user_data.tpl`) to back up the Jenkins data directory that resides in the `/ecs/jenkins-home` directory to an S3 bucket set via the `s3_bucket` variable (see `variables.tf`).
-There is a `restore_backup` terraform variable, which when set to true attempts to restore the S3 backup when an instance is started. This doesn't work yet because the backup needs to be restored before the Jenkins ECS task is started, which is currently not what happens.
-To work around this, you can manually run the restore backup command on the Jenkins EC2 instance and restart the ECS task by terminating the running container.
+#### Run 'terraform destroy' = all will be destroyed. be careful ..
 
-    docker run \
-    --env aws_key=${access_key} \
-    --env aws_secret=${secret_key} \
-    --env cmd=sync-s3-to-local \
-    --env SRC_S3=s3://${s3_bucket}/${ecs_cluster_name}/jenkins-home/  \
-    -v /ecs/jenkins-home:/opt/dest \
-    garland/docker-s3cmd
+    terraform destroy
 
-
-## Credits
-
-* The Makefile idea (and the Makefile itself) is taken from this [blog post](http://karlcode.owtelse.com/blog/2015/09/01/working-with-terraform-remote-statefile/).

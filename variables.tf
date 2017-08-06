@@ -32,16 +32,19 @@ variable "subnet_cidr_block" {
 }
 
 variable "amis" {
-  description = "Which AMI to spawn. Defaults to the AWS ECS optimized images."
+  description = "Which AMI to spawn. Defaults to the AWS ECS optimized images. see here for update http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html"
   default = {
-    us-east-1 = "ami-8f7687e2"
-    us-west-1 = "ami-bb473cdb"
-    us-west-2 = "ami-84b44de4"
-    eu-west-1 = "ami-4e6ffe3d"
-    eu-central-1 = "ami-b0cc23df"
-    ap-northeast-1 = "ami-095dbf68"
-    ap-southeast-1 = "ami-cf03d2ac"
-    ap-southeast-2 = "ami-697a540a"
+    us-east-2 = "ami-207b5a45"
+    us-east-1 = "ami-04351e12"
+    us-west-2 = "ami-57d9cd2e"
+    us-west-1 = "ami-7d664a1d"
+    eu-west-2 = "ami-ff15039b"
+    eu-west-1 = "ami-809f84e6"
+    eu-central-1 = "ami-a3a006cc"
+    ap-northeast-1 = "ami-e4657283"
+    ap-southeast-2 = "ami-42e9f921"
+    ap-southeast-1 = "ami-19f7787a"
+    ca-central-1 = "ami-3da81759"
   }
 }
 
@@ -75,14 +78,18 @@ variable "desired_service_count" {
 }
 
 variable "s3_bucket" {
-  default = "jenkins"
   description = "S3 bucket where remote state and Jenkins data will be stored."
 }
 
-variable "restore_backup" {
-  default = false
-  description = "Whether or not to restore Jenkins backup."
+variable "s3_bucket_key" {
+  description = "S3 bucket key where remote state will be stored."
 }
+
+
+variable "s3_bucket_encrypt" {
+  description = "S3 bucket encrypt or not on remote"
+}
+
 
 variable "jenkins_repository_url" {
   default = "jenkins"
@@ -98,3 +105,24 @@ variable "jenkins_java_build_agent_image_name" {
   default = "jenkins-java-agent"
   description = "Jenkins Java build agent image name."
 }
+
+variable "contact_email" {
+  default = "francois.branciard@iex.ec"
+  description = "contact email for the resource created "
+}
+
+variable "contact_office" {
+  default = "Lyon"
+  description = "contact office for the resource created "
+}
+
+variable "contact_name" {
+  default = "Francois Branciard"
+  description = "contact name for the resource created "
+}
+
+variable "push_docker_img_in_ecr" {
+  default = "false"
+  description = "if true it will push docker image into AWS ECR. if false you can do it mannualy after your terraform apply (it is faster, do not know why slow more 3 hours vs few minutes)"
+}
+
