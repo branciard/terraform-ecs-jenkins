@@ -35,7 +35,7 @@ The terraform script stores the terraform state remotely in an S3 bucket. The Ma
  Check that default values in variables.tf are correct for you
 
  Create a terraform.tfvars and fill it according to your config
-
+```
 s3_bucket = "your bucket name in aws"
 s3_bucket_key = "terraform.tfstate"
 s3_bucket_encrypt = "true"
@@ -45,6 +45,7 @@ region = "us-east-1"
 access_key = "your aws access key"
 secret_key = "your aws secret key"
 auto_push_docker_img_in_ecr = "true or false"
+```
 
 From the project's root directory,init your s3 bucket terraform backends with :
 
