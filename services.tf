@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs-task-role-jenkins" {
-  name = "${var.ecs_cluster_name}_task_role"
+  name = "${var.ecs_cluster_name}_task_role_${var.region}"
   assume_role_policy = "${file("roles/ecs-task-role.json")}"
 }
 
