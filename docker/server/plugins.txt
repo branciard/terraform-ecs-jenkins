@@ -50,7 +50,7 @@ blueocean-rest-impl:1.1.6
 pipeline-build-step:2.5.1
 docker-workflow:1.12
 blueocean-display-url:2.1.0
-workflow-job:2.12.2
+workflow-job:2.14.1
 ace-editor:1.1
 metrics:3.1.2.10
 github-oauth:0.27

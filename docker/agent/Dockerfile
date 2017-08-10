@@ -13,4 +13,11 @@ RUN pip install pymysql
 
 RUN apt-get -y install uuid-runtime
 
+RUN apt-get install -y mysql-client
+
+RUN echo "mysql-server mysql-server/root_password password root" | debconf-set-selections
+RUN echo "mysql-server mysql-server/root_password_again password root" | debconf-set-selections
+RUN apt-get install -y mysql-server
+
+
 ENTRYPOINT ["/opt/bin/entry_point.sh", "/usr/local/bin/jenkins-slave"]
