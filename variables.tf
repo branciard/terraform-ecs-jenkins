@@ -8,17 +8,17 @@ variable "secret_key" {
 
 variable "region" {
   description = "The AWS region to create resources in."
-  default = "us-east-1"
+  default = "ap-southeast-1"
 }
 
 variable "availability_zone" {
   description = "The availability zone"
-  default = "us-east-1b"
+  default = "ap-southeast-1b"
 }
 
 variable "ecs_cluster_name" {
   description = "The name of the Amazon ECS cluster."
-  default = "jenkins"
+  default = "jenkins-cluster"
 }
 
 variable "vpc_cidr_block" {
@@ -55,7 +55,7 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  default = "jenkins"
+  default = "jenkins-key"
   description = "SSH key name in your AWS account for AWS instances."
 }
 
@@ -94,7 +94,7 @@ variable "s3_bucket_encrypt" {
 
 
 variable "jenkins_repository_url" {
-  default = "jenkins"
+  default = "jenkins-ecr"
   description = "ECR Repository for Jenkins."
 }
 
@@ -103,9 +103,9 @@ variable "jenkins_server_image_name" {
   description = "Jenkins server image name."
 }
 
-variable "jenkins_java_build_agent_image_name" {
-  default = "jenkins-java-agent"
-  description = "Jenkins Java build agent image name."
+variable "jenkins_build_agent_image_name" {
+  default = "jenkins-agent"
+  description = "Jenkins build agent image name."
 }
 
 variable "contact_email" {

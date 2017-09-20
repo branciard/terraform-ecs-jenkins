@@ -23,14 +23,14 @@ output "push-manually-jenkins-server" {
 
 
 resource "aws_ecr_repository" "jenkins-build-agent" {
-  name = "${var.jenkins_java_build_agent_image_name}"
+  name = "${var.jenkins_build_agent_image_name}"
   provisioner "local-exec" {
-    command = "sh docker/deploy-image.sh ${self.repository_url} ${var.jenkins_java_build_agent_image_name} docker/agent ${var.region} ${var.push_docker_img_in_ecr}"
+    command = "sh docker/deploy-image.sh ${self.repository_url} ${var.jenkins_build_agent_image_name} docker/agent ${var.region} ${var.push_docker_img_in_ecr}"
   }
 }
 
 output "push-manually-jenkins-build-agent" {
-  value = "sh docker/deploy-image.sh ${aws_ecr_repository.jenkins-build-agent.repository_url} ${var.jenkins_java_build_agent_image_name} docker/agent ${var.region} true"
+  value = "sh docker/deploy-image.sh ${aws_ecr_repository.jenkins-build-agent.repository_url} ${var.jenkins_build_agent_image_name} docker/agent ${var.region} true"
 }
 
 data "template_file" "jenkins-task-template" {
@@ -52,8 +52,8 @@ resource "aws_ecs_task_definition" "jenkins-ecs-task-definition" {
   }
 }
 
-resource "aws_ecs_service" "jenkins" {
-  name = "jenkins"
+resource "aws_ecs_service" "jenkins-ecs" {
+  name = "jenkins-ecs"
   cluster = "${var.ecs_cluster_name}"
   task_definition = "${aws_ecs_task_definition.jenkins-ecs-task-definition.arn}"
   desired_count = "${var.desired_service_count}"

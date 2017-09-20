@@ -4,4 +4,4 @@ key = "terraform.tfstate"
 encrypt = true
 # use state locking
 #dynamodb_table = "tfstateLockDynamodbTable"
-region = "us-east-1"
+region = "ap-southeast-1"
