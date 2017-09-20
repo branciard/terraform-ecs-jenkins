@@ -5,7 +5,7 @@ provider "aws" {
 }
 
 terraform {
-  required_version = "0.9.11"
+  required_version = "0.10.6"
   backend "s3" {}
 }
 
@@ -129,7 +129,6 @@ resource "aws_ecs_cluster" "jenkins-cluster" {
 
 resource "aws_autoscaling_group" "asg-jenkins" {
   name = "${var.ecs_cluster_name}_asg"
-  availability_zones = ["${var.availability_zone}"]
   min_size = "${var.min_instance_size}"
   max_size = "${var.max_instance_size}"
   desired_capacity = "${var.desired_instance_capacity}"

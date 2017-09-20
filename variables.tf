@@ -16,7 +16,7 @@ variable "availability_zone" {
 
 variable "ecs_cluster_name" {
   description = "The name of the Amazon ECS cluster."
-  default = "jenkins-cluster"
+  default = "cluster-jenkins"
 }
 
 variable "vpc_cidr_block" {
@@ -121,7 +121,6 @@ variable "contact_name" {
 }
 
 variable "push_docker_img_in_ecr" {
-  default = "false"
   description = "if true it will push docker image into AWS ECR. if false you can do it mannualy after your terraform apply (it is faster, do not know why slow more 3 hours vs few minutes)"
 }
 
