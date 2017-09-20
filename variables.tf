@@ -34,19 +34,21 @@ variable "subnet_cidr_block" {
 variable "amis" {
   description = "Which AMI to spawn. Defaults to the AWS ECS optimized images. see here for update http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html"
   default = {
-    us-east-2 = "ami-207b5a45"
-    us-east-1 = "ami-04351e12"
-    us-west-2 = "ami-57d9cd2e"
-    us-west-1 = "ami-7d664a1d"
-    eu-west-2 = "ami-ff15039b"
-    eu-west-1 = "ami-809f84e6"
-    eu-central-1 = "ami-a3a006cc"
-    ap-northeast-1 = "ami-e4657283"
-    ap-southeast-2 = "ami-42e9f921"
-    ap-southeast-1 = "ami-19f7787a"
-    ca-central-1 = "ami-3da81759"
+    us-east-2 = "ami-1c002379"
+    us-east-1 = "ami-9eb4b1e5"
+    us-west-2 = "ami-1d668865"
+    us-west-1 = "ami-4a2c192a"
+    eu-west-2 = "ami-cb1101af"
+    eu-west-1 = "ami-8fcc32f6"
+    eu-central-1 = "ami-0460cb6b"
+    ap-northeast-1 = "ami-b743bed1"
+    ap-southeast-2 = "ami-c1a6bda2"
+    ap-southeast-1 = "ami-9d1f7efe"
+    ca-central-1 = "ami-b677c9d2"
   }
 }
+
+
 
 variable "instance_type" {
   default = "t2.medium"
