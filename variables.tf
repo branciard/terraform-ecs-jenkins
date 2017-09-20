@@ -8,12 +8,10 @@ variable "secret_key" {
 
 variable "region" {
   description = "The AWS region to create resources in."
-  default = "ap-southeast-1"
 }
 
 variable "availability_zone" {
   description = "The availability zone"
-  default = "ap-southeast-1b"
 }
 
 variable "ecs_cluster_name" {
@@ -55,7 +53,6 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  default = "jenkins-key"
   description = "SSH key name in your AWS account for AWS instances."
 }
 
