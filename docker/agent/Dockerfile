@@ -24,7 +24,6 @@ RUN echo "mysql-server mysql-server/root_password_again password root" | debconf
 RUN apt-get install -y mysql-server
 
 RUN mkdir /var/xwhep && chmod 777 /var/xwhep
-RUN mkdir /home/vagrant/castore && chmod 777 /home/vagrant/castore
 RUN chmod 777 /var/log
 
 
