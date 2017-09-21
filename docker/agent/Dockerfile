@@ -15,7 +15,7 @@ RUN pip install robotframework-selenium2library
 RUN pip install robotframework-databaselibrary
 RUN pip install pymysql
 
-RUN apt-get -y install uuid-runtime
+RUN apt-get -y install zip unzip wget make ant gcc uuid uuid-runtime vim git
 
 RUN apt-get install -y mysql-client
 
