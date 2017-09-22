@@ -27,9 +27,6 @@ RUN mkdir /var/xwhep && chmod 777 /var/xwhep
 RUN chmod 777 /var/log
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
-RUN nvm install v6.11.2
-
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 RUN touch ~/.bash_profile
 RUN echo 'export NVM_DIR=~/.nvm' >> .bash_profile
 RUN echo 'source ~/.nvm/nvm.sh' >> .bash_profile
