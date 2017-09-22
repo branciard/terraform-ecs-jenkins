@@ -2,10 +2,13 @@ FROM cloudbees/jnlp-slave-with-java-build-tools
 
 USER root
 
+RUN add-apt-repository -y ppa:ethereum/ethereum
 RUN apt-get update -q
 RUN apt-get -y install icedtea-8-plugin
 RUN apt-get -y install openjdk-8-jre
 RUN apt-get -y install openjdk-8-jdk
+
+RUN apt-get -y install ethereum
 
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qy python-pip groff-base
