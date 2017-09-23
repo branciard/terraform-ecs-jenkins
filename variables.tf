@@ -49,7 +49,7 @@ variable "amis" {
 
 
 variable "instance_type" {
-  default = "t2.xlarge"
+  default = "t2.large"
 }
 
 variable "key_name" {
