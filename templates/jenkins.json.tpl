@@ -2,8 +2,9 @@
   {
     "name": "jenkins",
     "image": "${jenkins_image_name}",
-    "cpu": 128,
-    "memory": 1024,
+    "cpu": 2048,
+    "memory": 7000,
+    "memoryReservation":6000,
     "essential": true,
     "portMappings": [
       {
