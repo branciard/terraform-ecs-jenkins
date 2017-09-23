@@ -51,6 +51,14 @@ From the project's root directory,init your s3 bucket terraform backends with :
 
 `terraform init -backend-config=backend.tfvars`
 
+
+
+if  "Error configuring the backend "s3": SignatureDoesNotMatch: " :
+do 
+```
+sudo ntpdate ntp.ubuntu.com
+```
+
 ## Usage
 
 #### Run 'terraform plan'
