@@ -29,8 +29,7 @@ RUN apt-get install -y mysql-server
 RUN mkdir /var/xwhep && chmod 777 /var/xwhep
 RUN chmod 777 /var/log
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash
-RUN apt-get install -y nodejs
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 
 
 ENTRYPOINT ["/opt/bin/entry_point.sh", "/usr/local/bin/jenkins-slave"]
