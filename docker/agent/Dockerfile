@@ -7,6 +7,7 @@ RUN apt-get update -q
 RUN apt-get -y install icedtea-8-plugin
 RUN apt-get -y install openjdk-8-jre
 RUN apt-get -y install openjdk-8-jdk
+RUN apt-get -y install  docker.io
 
 RUN apt-get -y install ethereum
 
@@ -31,5 +32,6 @@ RUN chmod 777 /var/log
 
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 ENTRYPOINT ["/opt/bin/entry_point.sh", "/usr/local/bin/jenkins-slave"]
